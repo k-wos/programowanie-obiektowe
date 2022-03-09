@@ -7,6 +7,11 @@ namespace lab_1
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
+            Money money = Money.Of(10, Currency.PLN);
+            Money result = 5 * money;
+            Console.WriteLine(result.Value);
+            Money sum = money + result;
+            Console.WriteLine(sum.Value);
         }
     }
     public class PersonProperties
@@ -44,7 +49,49 @@ namespace lab_1
             _value = value;
             _currency = currency;
         }
- 
-}
+
+        public decimal Value
+        {
+            get
+            {
+                return _value;
+            }
+        }
+
+        public Currency Currency
+        {
+            get
+            {
+                return _currency;
+            }
+        }
+
+        public static Money? Of(decimal value, Currency currency)
+        {
+            return value < 0 ? null : new Money(value, currency);
+        }
+
+        public static Money operator *(Money a, decimal b)
+        {
+            return Money.Of(a._value * b, a._currency);
+        }
+        public static Money operator *(decimal b, Money a)
+        {
+            return Money.Of(a._value * b, a._currency);
+        }
+
+        public static Money operator +(Money a, Money b)
+        {
+            if (a.Currency != b.Currency)
+            {
+                throw new ArgumentException("Different currencies");
+            }
+            else
+            {
+                return Money.Of(a._value + b._value,a._currency);
+            }
+        }
+
+    }
 
 }
