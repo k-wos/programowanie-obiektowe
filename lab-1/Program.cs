@@ -12,6 +12,15 @@ namespace lab_1
             Console.WriteLine(result.Value);
             Money sum = money + result;
             Console.WriteLine(sum.Value);
+            Console.WriteLine(sum < money);
+            Console.WriteLine(money == Money.Of(10, Currency.PLN));
+            Console.WriteLine(money != Money.Of(10, Currency.PLN));
+            decimal amount = money;
+            double cost = (double) money;
+            float price = (float)money;
+            Console.WriteLine(amount);
+            Console.WriteLine(cost);
+            Console.WriteLine(price);
         }
     }
     public class PersonProperties
@@ -91,6 +100,52 @@ namespace lab_1
                 return Money.Of(a._value + b._value,a._currency);
             }
         }
+        public static bool operator >(Money a, Money b)
+        {
+            if (a.Currency != b.Currency)
+            {
+                throw new ArgumentException("Different currencies");
+            }
+            else
+            {
+                return a.Value > b.Value;
+            }
+        }
+        public static bool operator <(Money a, Money b)
+        {
+            if (a.Currency != b.Currency)
+            {
+                throw new ArgumentException("Different currencies");
+            }
+            else
+            {
+                return a.Value < b.Value;
+            }
+        }
+        public static bool operator ==(Money a, Money b)
+        {
+            return a.Value == b.Value && a.Currency == b.Currency; 
+        }
+        public static bool operator !=(Money a, Money b)
+        {
+            return !(a == b);
+        }
+
+        public static implicit operator decimal(Money money)
+        {
+            return money.Value;
+        }
+
+        public static explicit operator double(Money money)
+        {
+            return (double)money.Value;
+        }
+
+        public static explicit operator float(Money money)
+        {
+            return (float)money.Value;
+        }
+
 
     }
 
