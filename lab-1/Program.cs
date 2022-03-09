@@ -21,6 +21,25 @@ namespace lab_1
             Console.WriteLine(amount);
             Console.WriteLine(cost);
             Console.WriteLine(price);
+            Console.WriteLine($"{money}");
+            money.Equals(cost);
+            Console.WriteLine();
+
+            Money[] prices =
+            {
+                Money.Of(11, Currency.PLN),
+                Money.Of(13, Currency.PLN),
+                Money.Of(17, Currency.USD),
+                Money.Of(12, Currency.USD),
+                Money.Of(11, Currency.USD),
+                Money.Of(12, Currency.EUR)
+            };
+
+            Array.Sort(prices);
+            foreach(var x in prices)
+            {
+                Console.WriteLine(x.ToString());
+            }
         }
     }
     public class PersonProperties
@@ -49,7 +68,7 @@ namespace lab_1
         EUR = 3
     }
 
-    public class Money 
+    public class Money : IEquatable<Money>, IComparable<Money>
     {
         private readonly decimal _value;
         private readonly Currency _currency;
@@ -145,8 +164,40 @@ namespace lab_1
         {
             return (float)money.Value;
         }
+        public override string ToString()
+        {
+            return $"{_value} {_currency}";
+        }
 
+        public override bool Equals(object obj)
+        {
+            return obj is Money money &&
+                   _value == money._value &&
+                   _currency == money._currency;
+        }
 
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(_value, _currency);
+        }
+
+        public bool Equals(Money other)
+        {
+            return  _value == other._value && _currency == other._currency;
+        }
+
+        public int CompareTo(Money other)
+        {
+            int result = _currency.CompareTo(other._currency);
+            if(result == 0)
+            {
+                return _value.CompareTo(other._value);
+            }
+            else
+            {
+                return result;
+            }
+        }
     }
 
 }
