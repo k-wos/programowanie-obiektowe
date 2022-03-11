@@ -44,21 +44,49 @@ namespace lab_1
     }
     public class PersonProperties
     {
-        private string firstName;
-        public string FirstName
+        private string _name;
+
+        private PersonProperties(string name)
+        {
+            _name = name;
+        }
+        
+        public static PersonProperties Of(string name)
+        {
+            if(name != null && name.Length >= 3)
+            {
+                return new PersonProperties(name);
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException("Za krótkie imie");
+            }
+        }
+
+        public string Name
         {
             get
             {
-                return firstName;
+                return _name;
             }
             set
             {
-                if (value.Length >= 2)
+                if (value != null && value.Length >= 3)
                 {
-                    firstName = value;
+                    _name = value;
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException("Za krótkie imie");
                 }
             }
         }
+        public override string ToString()
+        {
+            return _name;
+        }
+
+
     }
 
     public enum Currency
@@ -197,6 +225,87 @@ namespace lab_1
             {
                 return result;
             }
+        }
+    }
+
+    public class Tank
+    {
+        public readonly int Capacity;
+        private int _level;
+
+        public Tank(int capacity)
+        {
+            Capacity = capacity;
+        }
+
+        public int Level
+        {
+            get
+            {
+                return _level;
+            }
+            private set
+            {
+                if(value < 0 || value > Capacity)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+
+                _level = value;
+            }
+        }
+
+        public bool Refuel(int amount)
+        {
+            if( amount < 0)
+            {
+                return false;
+            }
+            if(_level + amount > Capacity)
+            {
+                return false;
+            }
+            _level += amount;
+            return true;
+        }
+
+        public bool Consume(int amount)
+        {
+            if(amount > _level)
+            {
+                return false;
+            }
+            if(amount < 0)
+            {
+                return false;
+            }
+
+            _level -= amount;
+            return true;
+        }
+
+        public bool Refuel(Tank sourceTank, int amount)
+        {
+            if(amount + _level > Capacity)
+            {
+                return false;
+            }
+            if(sourceTank._level - amount < 0)
+            {
+                return false;
+            }
+            if(amount < 0)
+            {
+                return false;
+            }
+            sourceTank._level -= amount;
+            _level += amount;
+            return true;
+
+        }
+        public override string ToString()
+        {
+            return $"Capacity = {Capacity}, Level = {_level}";
         }
     }
 
