@@ -22,14 +22,33 @@ namespace lab_2
     }
     public abstract class Scooter : Vehicle
     {
-        
+        public bool isBreak { get; set; }
+
+        public override decimal Drive(int distance)
+        {
+            if (isBreak)
+            {
+                _mileage += distance;
+                return (decimal)(distance / (double)MaxSpeed);
+            }
+            return -1;
+
+        }
+
+        public override string ToString()
+        {
+            return $"Scooter{{ Weight: {Weight}, MaxSpeed: {MaxSpeed}, Mileage: {_mileage} }}";
+        }
     }
 
     class ElectricScooter : Scooter
     {
-        public decimal BatteriesLevel { get; init; }
+        public decimal BatteriesLevel { get; set; }
 
-        
+        public void RechargeBattery()
+        {
+            BatteriesLevel = 100;
+        }
 
         public override decimal Drive(int distance)
         {
@@ -172,7 +191,7 @@ namespace lab_2
                     Console.WriteLine(car1);
                 }
             }
-            IElectric[] electrics = new IElectric[3];
+           // IElectric[] electrics = new IElectric[3];
 
             IAggregate aggregate = new IntAggregate();
             IIterator iterator = aggregate.createIterator();
