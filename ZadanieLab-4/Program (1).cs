@@ -44,7 +44,24 @@ class Exercise1
 {
     public static (int, int) NextPoint(Direction4 direction, (int, int) point, (int, int) screenSize)
     {
-        throw new NotImplementedException();
+        (int, int) result = point;
+        point = direction switch
+        {
+            Direction4.UP => (result.Item1, result.Item2 - 1),
+            Direction4.RIGHT => (result.Item1 + 1, result.Item2),
+            Direction4.DOWN => (result.Item1, result.Item2 + 1),
+            Direction4.LEFT => (result.Item1 - 1, result.Item2),
+            _ => (result.Item1, result.Item2)
+        };
+
+        if((result.Item1 > screenSize.Item1)||(result.Item2> screenSize.Item2))
+        {
+            return point;
+        }
+        else
+        {
+            return result;
+        }
     }
 }
 //Cwiczenie 2
