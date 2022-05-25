@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,8 +24,40 @@ namespace App_1
     /// </summary>
     public partial class MainWindow : Window
     {
-        record Rate(string Code, string Currency, double Bid, double Ask);
+        //record Rate(string Code, string Currency, double Bid, double Ask);
+        record Rate(string Code, string Currency, double Bid, double Ask)
+        {
+            [JsonPropertyName("code")]
+            public string Code { get; set; }
+            [JsonPropertyName("currency")]
+            public string Currency { get; set; }
+            [JsonPropertyName("bid")]
+            public decimal Bid { get; set; }
+            [JsonPropertyName("ask")]
+            public decimal Ask { get; set; }
+        };
         Dictionary<string, Rate> Rates = new Dictionary<string, Rate>();
+
+        class RateTable
+        {
+            [JsonPropertyName("table")]
+            public string Table { get; set; }
+            [JsonPropertyName("no")]
+            public string Number { get; set; }
+            [JsonPropertyName("tradingDate")]
+            public DateTime TradingDate { get; set; }
+            [JsonPropertyName("effectiveDate")]
+            public DateTime EffectiveDate { get; set; }
+            public List<Rate> Rates { get; set; }
+        }
+        private void DownloadDateJson()
+        {
+            WebClient client = new WebClient();
+            client.Headers.Add("Accept", "application/json");
+            string json = client.DownloadString("http://api.nbp.pl/api/exchangerates/tables/C");
+            RateTable rateTable = JsonSerializer.Deserialize<List<RateTable>>(json)[0];
+            rateTable.Rates.Add(new Rate("PLN", "złoty", 1, 1));
+        }
         public void DownloadData()
         {
             WebClient client = new WebClient();
